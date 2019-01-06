@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 from collections import OrderedDict
 
@@ -42,6 +43,7 @@ def main():
         row_type = {'row': {'seq': build_attributes_list(field_data.split(';'))}}
         types_block['types'].update(row_type)
 
+        types_block['types'].update(TypeBlocks.trifloat())
         types_block['types'].update(TypeBlocks.uuid())
         types_block['types'].update(TypeBlocks.vec3())
 
@@ -63,7 +65,7 @@ def build_attributes_list(field_data):
         id_attribute, type_attribute = attributes.split(',')
 
         key_value_pair = OrderedDict({
-            'id': id_attribute,
+            'id': fix_camelcase(id_attribute),
             'type': type_attribute,
         })
 
@@ -75,6 +77,11 @@ def build_attributes_list(field_data):
 def delete_folder(relative_path):
     folder_path = os.path.join(ROOT, relative_path)
     shutil.rmtree(folder_path, ignore_errors=True)
+
+
+def fix_camelcase(s):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', s)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 def fix_indentation(stream):
