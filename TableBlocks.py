@@ -36,23 +36,25 @@ class TypeBlocks:
     @staticmethod
     def quat():
         result = {'quat': {'seq': [
-            OrderedDict({'id': 'quat_x', 'type': 's4'}),
-            OrderedDict({'id': 'quat_y', 'type': 's4'}),
-            OrderedDict({'id': 'quat_z', 'type': 's4'}),
-            OrderedDict({'id': 'quat_w', 'type': 's4'}),
+            OrderedDict({'id': 'x', 'type': 's4'}),
+            OrderedDict({'id': 'y', 'type': 's4'}),
+            OrderedDict({'id': 'z', 'type': 's4'}),
+            OrderedDict({'id': 'w', 'type': 's4'}),
         ]}}
         return result
 
     @staticmethod
     def quatt():
-        result = {'quatt': {'seq': [{'id': 'quatt_data', 'size': 28}]}}
+        result = {'quatt': {'seq': [
+            OrderedDict({'id': 'quatt_data', 'size': 28}),
+        ]}}
         return result
 
     @staticmethod
     def vec3():
         result = {'vec3': {'seq': [
-            OrderedDict({'id': 'vec3_x', 'type': 's4'}),
-            OrderedDict({'id': 'vec3_y', 'type': 's4'}),
-            OrderedDict({'id': 'vec3_z', 'type': 's4'}),
+            OrderedDict({'id': 'x', 'type': 's4'}),
+            OrderedDict({'id': 'y', 'type': 's4'}),
+            OrderedDict({'id': 'z', 'type': 's4'}),
         ]}}
         return result
