@@ -51,22 +51,6 @@ class TypeBlocks:
         return result
 
     @staticmethod
-    def trifloat():
-        result = {'trifloat': {'seq': [
-            OrderedDict({'id': 'float_a', 'type': 'f4'}),
-            OrderedDict({'id': 'float_b', 'type': 'f4'}),
-            OrderedDict({'id': 'float_c', 'type': 'f4'}),
-        ]}}
-        return result
-
-    @staticmethod
-    def uuid():
-        result = {'uuid': {'seq': [
-            OrderedDict({'id': 'uuid_type', 'size': 16})
-        ]}}
-        return result
-
-    @staticmethod
     def vec3():
         result = {'vec3': {'seq': [
             OrderedDict({'id': 'vec3_x', 'type': 's4'}),

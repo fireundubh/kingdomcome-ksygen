@@ -43,8 +43,6 @@ def main():
         row_type = {'row': {'seq': build_attributes_list(field_data.split(';'))}}
         types_block['types'].update(row_type)
 
-        types_block['types'].update(TypeBlocks.trifloat())
-        types_block['types'].update(TypeBlocks.uuid())
         types_block['types'].update(TypeBlocks.vec3())
 
         # create block layout
@@ -84,6 +82,12 @@ def fix_camelcase(s):
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
+def fix_data(stream):
+    stream = stream.replace('type: character_varying', 'size: 12')
+    stream = stream.replace('type: uuid', 'size: 16')
+    return stream
+
+
 def fix_indentation(stream):
     indent = ' ' * 2
     stream = stream.replace('- id:',
@@ -117,6 +121,7 @@ def write_yaml(target_file, types_block):
     with open(target_file, 'a+') as o:
         stream = yaml.dump(types_block, default_flow_style=False)
         stream = fix_indentation(stream)
+        stream = fix_data(stream)
         o.write(stream)
 
 
