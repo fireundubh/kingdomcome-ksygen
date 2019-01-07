@@ -44,6 +44,11 @@ class TypeBlocks:
         return result
 
     @staticmethod
+    def quatt():
+        result = {'quatt': {'seq': [{'id': 'quatt_data', 'size': 28}]}}
+        return result
+
+    @staticmethod
     def vec3():
         result = {'vec3': {'seq': [
             OrderedDict({'id': 'vec3_x', 'type': 's4'}),

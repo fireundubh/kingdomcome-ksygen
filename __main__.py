@@ -49,6 +49,9 @@ def main():
         if 'quat' in field_types:
             types_block['types'].update(TypeBlocks.quat())
 
+        if 'quatt' in field_types:
+            types_block['types'].update(TypeBlocks.quatt())
+
         if 'vec3' in field_types:
             types_block['types'].update(TypeBlocks.vec3())
 

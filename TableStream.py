@@ -12,7 +12,6 @@ class TableStream:
     @classmethod
     def _format_types(cls, stream):
         stream = stream.replace('type: character_varying', 'size: 12')
-        stream = stream.replace('type: quatt', 'size: 28')
         stream = stream.replace('type: uuid', 'size: 16')
         return stream
 
