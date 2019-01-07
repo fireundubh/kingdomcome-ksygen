@@ -1,61 +1,45 @@
-from collections import OrderedDict
+import os
+
+from stdlib.ZipFilePatch import ZipFileFixed
 
 
-class Blocks:
-    @staticmethod
-    def seq():
-        result = OrderedDict({'seq': [
-            OrderedDict({'id': 'table', 'type': 'header'}),
-            OrderedDict({'id': 'rows', 'type': 'row', 'repeat': 'expr', 'repeat-expr': 'table.row_count'}),
-            OrderedDict({'id': 'strings', 'type': 'strz', 'repeat': 'expr', 'repeat-expr': 'table.unique_strings_count'}),
-        ]})
+class TableData:
+    def __init__(self, table, table_data_path):
+        self._table_data_path = table_data_path
+
+        self._relative_path, self._field_data = table.split('\t')
+
+        _, relative_path_tail = os.path.split(self._relative_path)
+        self._file_name, _ = os.path.splitext(relative_path_tail)
+
+    @property
+    def name(self):
+        return self._file_name
+
+    @name.setter
+    def name(self, value):
+        self._file_name = value
+
+    @property
+    def yaml_name(self):
+        return '%s.yml' % self._relative_path[:-4]
+
+    @property
+    def field_data(self):
+        return self._field_data.split(';')
+
+    def get_field_types(self):
+        result = list()
+
+        for field_attributes in self.field_data:
+            _, field_type = field_attributes.split(',')
+            result.append(field_type)
+
         return result
 
-
-class TypeBlocks:
-    @staticmethod
-    def header():
-        result = {'header': {'seq': [
-            OrderedDict({'id': 'version', 'type': 's4'}),
-            OrderedDict({'id': 'descriptors_hash', 'type': 'u4'}),
-            OrderedDict({'id': 'layout_hash', 'type': 'u4'}),
-            OrderedDict({'id': 'table_version', 'type': 's4'}),
-            OrderedDict({'id': 'row_count', 'type': 's4'}),
-            OrderedDict({'id': 'string_data_size', 'type': 's4'}),
-            OrderedDict({'id': 'unique_strings_count', 'type': 's4'}),
-        ]}}
-        return result
-
-    @staticmethod
-    def padding():
-        result = {'padding': {'seq': [
-            OrderedDict({'id': 'padding_type', 'size': 16})
-        ]}}
-        return result
-
-    @staticmethod
-    def quat():
-        result = {'quat': {'seq': [
-            OrderedDict({'id': 'quat_x', 'type': 's4'}),
-            OrderedDict({'id': 'quat_y', 'type': 's4'}),
-            OrderedDict({'id': 'quat_z', 'type': 's4'}),
-            OrderedDict({'id': 'quat_w', 'type': 's4'}),
-        ]}}
-        return result
-
-    @staticmethod
-    def quatt():
-        result = {'quatt': {'seq': [
-            OrderedDict({'id': 'quatt_type', 'size': 28})
-        ]}}
-        return result
-
-    @staticmethod
-    def vec3():
-        result = {'vec3': {'seq': [
-            OrderedDict({'id': 'vec3_x', 'type': 's4'}),
-            OrderedDict({'id': 'vec3_y', 'type': 's4'}),
-            OrderedDict({'id': 'vec3_z', 'type': 's4'}),
-        ]}}
-        return result
-
+    def has_padding(self):
+        with ZipFileFixed(self._table_data_path) as f:
+            table_path = os.path.join('Libs\Tables', self._relative_path)
+            table_path = table_path.replace(os.path.sep, '/')
+            tbl_data = f.open(table_path).read()
+            return tbl_data.find(b'\xff' * 16) > -1
